@@ -1,3 +1,9 @@
+pub mod acceleration;
+pub mod enemy;
+pub mod main_camera;
+pub mod name;
+pub mod physics;
 pub mod player;
 pub mod position;
-pub mod name;
+pub mod projectile;
+pub mod velocity;
