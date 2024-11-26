@@ -2,13 +2,13 @@ use bevy::{ecs::{query::BatchingStrategy}, prelude::*};
 
 use crate::components::{projectile::Projectile, velocity::Velocity};
 
-pub fn projectile_system(mut query: Query<(&mut Transform, &Velocity, &mut Projectile)>,time: Res<Time>) {
+pub fn projectile_system(mut query: Query<(&mut Projectile)>,time: Res<Time>) {
 
     let delta = time.delta_seconds();
 
     query.par_iter_mut()
         .batching_strategy(BatchingStrategy::fixed(32))
-        .for_each(|(_, _, mut projectile)| {
+        .for_each(|(mut projectile)| {
             projectile.life -= delta;
         });
 
