@@ -8,7 +8,7 @@ use bevy_rapier2d::{
 };
 use systems::{
     camera_system::camera_system,
-    enemy_system::{enemy_collision, enemy_targeting, player_collision},
+    enemy_system::{enemy_collision, enemy_despawn_system},
     greet_people::greet_people,
     physics::physics_system,
     player_movement::player_movement,
@@ -32,7 +32,8 @@ fn main() {
                 player_movement,
                 projectile_system,
                 projectile_despawn_system,
-                // enemy_collision,
+                enemy_collision,
+                enemy_despawn_system
             ),
         )
         .run();

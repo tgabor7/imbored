@@ -20,7 +20,8 @@ use crate::components::{
 pub fn add_people(mut commands: Commands) {
     commands
         .spawn(Collider::cuboid(500.0, 30.0))
-        .insert(TransformBundle::from(Transform::from_xyz(0.0, -100.0, 0.0)));
+        .insert(TransformBundle::from(Transform::from_xyz(0.0, -100.0, 0.0)))
+        .insert(Enemy { target: false, health: 100 });
 
     /* Create the bouncing ball. */
     commands

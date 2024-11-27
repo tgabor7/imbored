@@ -5,13 +5,9 @@ use crate::components::{
     projectile::Projectile,
 };
 use bevy::{prelude::*, render::camera, window::PrimaryWindow};
-use bevy_rapier2d::{
-    prelude::{
-        Ccd, Collider, ExternalForce, GravityScale, KinematicCharacterController, Restitution,
-        RigidBody, Sensor, Sleeping, Velocity,
-    },
-    rapier::prelude::ColliderBuilder,
-};
+use bevy_rapier2d::prelude::{
+        ActiveEvents, Ccd, Collider, ExternalForce, GravityScale, KinematicCharacterController, Restitution, RigidBody, Sensor, Sleeping, Velocity
+    };
 
 pub fn player_movement(
     mut commands: Commands,
@@ -80,6 +76,7 @@ pub fn player_movement(
             };
 
             if mouse_buttons.pressed(MouseButton::Left) {
+
                 commands
                     .spawn(RigidBody::Dynamic)
                     .insert(TransformBundle::from(Transform::from_translation(
@@ -89,7 +86,8 @@ pub fn player_movement(
                     .insert(GravityScale(0.5))
                     .insert(Collider::cuboid(10.0, 10.0))
                     .insert(Sleeping::disabled())
-                    .insert(Projectile { life: 1.0 })
+                    .insert(ActiveEvents::COLLISION_EVENTS)
+                    .insert(Projectile { life: 1.0, damage: 1 })
                     .insert(Ccd::enabled());
             }
         }
