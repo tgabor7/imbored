@@ -1,7 +1,16 @@
 use bevy::{
-    core_pipeline::core_2d::Camera2dBundle, ecs::system::Commands, math::{Vec2, Vec3}, prelude::TransformBundle, render::color::Color, sprite::{Sprite, SpriteBundle}, transform::components::Transform, utils::default
+    core_pipeline::core_2d::Camera2dBundle,
+    ecs::system::Commands,
+    math::{Vec2, Vec3},
+    prelude::TransformBundle,
+    render::color::Color,
+    sprite::{Sprite, SpriteBundle},
+    transform::components::Transform,
+    utils::default,
 };
-use bevy_rapier2d::prelude::{Collider, ExternalForce, KinematicCharacterController, Restitution, RigidBody};
+use bevy_rapier2d::prelude::{
+    Collider, ExternalForce, KinematicCharacterController, Restitution, RigidBody,
+};
 
 use crate::components::{
     acceleration::Acceleration, enemy::Enemy, main_camera::MainCamera, physics::Physics,
@@ -9,7 +18,7 @@ use crate::components::{
 };
 
 pub fn add_people(mut commands: Commands) {
-        commands
+    commands
         .spawn(Collider::cuboid(500.0, 30.0))
         .insert(TransformBundle::from(Transform::from_xyz(0.0, -100.0, 0.0)));
 
@@ -21,7 +30,7 @@ pub fn add_people(mut commands: Commands) {
         .insert(Restitution::coefficient(0.7))
         .insert(TransformBundle::from(Transform::from_xyz(0.0, 400.0, 0.0)))
         .insert(KinematicCharacterController::default());
-    
+
     commands.spawn((Camera2dBundle::default(), MainCamera));
     // commands.spawn((
     //     SpriteBundle {

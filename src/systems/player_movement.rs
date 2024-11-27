@@ -5,9 +5,13 @@ use crate::components::{
     projectile::Projectile,
 };
 use bevy::{prelude::*, render::camera, window::PrimaryWindow};
-use bevy_rapier2d::{prelude::{
-    Ccd, Collider, ExternalForce, GravityScale, KinematicCharacterController, Restitution, RigidBody, Sensor, Sleeping, Velocity
-}, rapier::prelude::ColliderBuilder};
+use bevy_rapier2d::{
+    prelude::{
+        Ccd, Collider, ExternalForce, GravityScale, KinematicCharacterController, Restitution,
+        RigidBody, Sensor, Sleeping, Velocity,
+    },
+    rapier::prelude::ColliderBuilder,
+};
 
 pub fn player_movement(
     mut commands: Commands,
@@ -49,20 +53,21 @@ pub fn player_movement(
                 camera_speed,
             );
 
-        let mut cursor_position = Vec2::new(0.0, 0.0);
+            let mut cursor_position = Vec2::new(0.0, 0.0);
 
-        // There is only one primary window, so we can similarly get it from the query:
-        let window = q_windows.single();
+            // There is only one primary window, so we can similarly get it from the query:
+            let window = q_windows.single();
 
-        let (camera, camera_transform_g) = q_camera.single();
-        // check if the cursor is inside the window and get its position
-        // then, ask bevy to convert into world coordinates, and truncate to discard Z
-        if let Some(world_position) = window.cursor_position()
-            .and_then(|cursor| camera.viewport_to_world(camera_transform_g, cursor))
-            .map(|ray| ray.origin.truncate())
-        {
-            cursor_position = world_position;
-        }
+            let (camera, camera_transform_g) = q_camera.single();
+            // check if the cursor is inside the window and get its position
+            // then, ask bevy to convert into world coordinates, and truncate to discard Z
+            if let Some(world_position) = window
+                .cursor_position()
+                .and_then(|cursor| camera.viewport_to_world(camera_transform_g, cursor))
+                .map(|ray| ray.origin.truncate())
+            {
+                cursor_position = world_position;
+            }
 
             let direction = cursor_position.sub(Vec2::new(
                 player_transform.0.translation.x,
@@ -77,11 +82,9 @@ pub fn player_movement(
             if mouse_buttons.pressed(MouseButton::Left) {
                 commands
                     .spawn(RigidBody::Dynamic)
-                    .insert(TransformBundle::from(
-                        Transform::from_translation(
-                            player_transform.0.translation + direction.normalize().extend(0.0) * 30.0
-                        )
-                    ))
+                    .insert(TransformBundle::from(Transform::from_translation(
+                        player_transform.0.translation + direction.normalize().extend(0.0) * 30.0,
+                    )))
                     .insert(projectile_initial_velocity)
                     .insert(GravityScale(0.5))
                     .insert(Collider::cuboid(10.0, 10.0))
