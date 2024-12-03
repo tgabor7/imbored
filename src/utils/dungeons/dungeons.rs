@@ -13,7 +13,12 @@ pub struct Room {
 
 impl Room {
     pub fn new(x: i32, y: i32, width: i32, height: i32) -> Self {
-        Room { x, y, width, height }
+        Room {
+            x,
+            y,
+            width,
+            height,
+        }
     }
 
     pub fn intersects(&self, other: &Room) -> bool {
