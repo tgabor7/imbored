@@ -3,7 +3,10 @@ use bevy::{
     prelude::*,
     prelude::{Commands, Entity, Transform, With, Without},
 };
-use bevy_rapier2d::{plugin::RapierContext, prelude::{CollisionEvent, Velocity}};
+use bevy_rapier2d::{
+    plugin::RapierContext,
+    prelude::{CollisionEvent, Velocity},
+};
 use rand::Rng;
 
 use crate::{

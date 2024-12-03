@@ -4,10 +4,11 @@ use crate::components::{
     acceleration::Acceleration, main_camera::MainCamera, physics::Physics, player::Player,
     projectile::Projectile,
 };
-use bevy::{prelude::*, render::camera, window::PrimaryWindow};
+use bevy::{input::mouse::MouseWheel, prelude::*, render::camera, window::PrimaryWindow};
 use bevy_rapier2d::prelude::{
-        ActiveEvents, Ccd, Collider, ExternalForce, GravityScale, KinematicCharacterController, Restitution, RigidBody, Sensor, Sleeping, Velocity
-    };
+    ActiveEvents, Ccd, Collider, ExternalForce, GravityScale, KinematicCharacterController,
+    Restitution, RigidBody, Sensor, Sleeping, Velocity,
+};
 
 pub fn player_movement(
     mut commands: Commands,
@@ -15,6 +16,7 @@ pub fn player_movement(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut camera_query: Query<(&mut Transform, &Camera, &GlobalTransform), With<MainCamera>>,
     mouse_buttons: Res<ButtonInput<MouseButton>>,
+    mut mouse_scroll: EventReader<MouseWheel>,
     player: Query<(&Transform, &Player), Without<MainCamera>>,
     q_windows: Query<&Window, With<PrimaryWindow>>,
     q_camera: Query<(&Camera, &GlobalTransform), With<MainCamera>>,
@@ -33,6 +35,8 @@ pub fn player_movement(
         if keyboard_input.pressed(KeyCode::KeyD) {
             direction.x += 10.0;
         }
+
+        // zoom out with the mouse wheel
 
         controller.translation = Some(direction);
 
@@ -76,19 +80,25 @@ pub fn player_movement(
             };
 
             if mouse_buttons.pressed(MouseButton::Left) {
-
                 commands
                     .spawn(RigidBody::Dynamic)
                     .insert(TransformBundle::from(Transform::from_translation(
                         player_transform.0.translation + direction.normalize().extend(0.0) * 30.0,
                     )))
                     .insert(projectile_initial_velocity)
-                    .insert(GravityScale(0.5))
+                    .insert(GravityScale(0.))
                     .insert(Collider::cuboid(10.0, 10.0))
                     .insert(Sleeping::disabled())
                     .insert(ActiveEvents::COLLISION_EVENTS)
-                    .insert(Projectile { life: 1.0, damage: 1 })
+                    .insert(Projectile {
+                        life: 1.0,
+                        damage: 1,
+                    })
                     .insert(Ccd::enabled());
+            }
+            for ev in mouse_scroll.read() {
+                // zoom in and out
+                camera_transform.0.scale = Vec3::splat(camera_transform.0.scale.x + ev.y * 0.1);
             }
         }
     }

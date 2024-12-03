@@ -33,7 +33,7 @@ fn main() {
                 projectile_system,
                 projectile_despawn_system,
                 enemy_collision,
-                enemy_despawn_system
+                enemy_despawn_system,
             ),
         )
         .run();
